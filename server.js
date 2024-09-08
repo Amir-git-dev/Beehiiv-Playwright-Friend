@@ -15,7 +15,10 @@ app.get('/get-revenue', async (req, res) => {
 
       console.log("Starting revenue calculation...");
       res.status(500).json({ message: 'starting rev calculation' });
-      const browser = await chromium.launch({ headless: false });
+      const browser = await chromium.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+      });      
       res.status(500).json({ message: 'opened browser' });
       const context = await browser.newContext({ ignoreHTTPSErrors: true });
       const page = await context.newPage();
