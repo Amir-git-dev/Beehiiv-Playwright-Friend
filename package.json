@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@playwright/test": "^1.46.1"
+    "@playwright/test": "^1.47.0"
   },
   "dependencies": {
     "@2captcha/captcha-solver": "^1.1.1",
@@ -8,7 +8,12 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "googleapis": "^143.0.0",
+    "playwright": "^1.47.0",
     "playwright-extra": "^4.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "build": "npm i"
   }
 }
