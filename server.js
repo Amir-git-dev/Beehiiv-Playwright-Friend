@@ -14,24 +14,22 @@ app.get('/get-revenue', async (req, res) => {
     try {
 
       console.log("Starting revenue calculation...");
-      res.status(500).json({ message: 'starting rev calculation' });
       const browser = await chromium.launch({
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox']
-      });      
-      res.status(500).json({ message: 'opened browser' });
+      }); 
+      console.log("browser opened");     
       const context = await browser.newContext({ ignoreHTTPSErrors: true });
       const page = await context.newPage();
       await page.addInitScript({ path: './inject.js' });
-      res.status(500).json({ message: 'added script' });
-  
+      console.log("added script")
+
       page.on('console', async (msg) => {
         const txt = msg.text();
         if (txt.includes('intercepted-params:')) {
           const params = JSON.parse(txt.replace('intercepted-params:', ''));
           try {
             console.log("Solving captcha...");
-            res.status(500).json({ message: 'Solving Captchha' });
             const res = await solver.cloudflareTurnstile(params);
             console.log(`Captcha solved: ${res.id}`);
             res.status(500).json({ message: 'Solving Captcha' });
@@ -40,12 +38,12 @@ app.get('/get-revenue', async (req, res) => {
             }, res.data);
           } catch (e) {
             console.error("Captcha solver error:", e);
-            res.status(500).json({ error: 'Captcha solver error' });
             return;
         }
         }
       });
   
+      console.log("logging in")
       await page.goto('https://app.beehiiv.com/login');
       await page.fill('input[name="email"]', process.env.EMAIL);
       await page.fill('input[name="password"]', process.env.PASSWORD);
