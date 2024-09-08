@@ -14,11 +14,13 @@ app.get('/get-revenue', async (req, res) => {
     try {
 
       console.log("Starting revenue calculation...");
-      res.status(500).json({ message: 'starting rev calc' });
+      res.status(500).json({ message: 'starting rev calculation' });
       const browser = await chromium.launch({ headless: false });
+      res.status(500).json({ message: 'opened browser' });
       const context = await browser.newContext({ ignoreHTTPSErrors: true });
       const page = await context.newPage();
       await page.addInitScript({ path: './inject.js' });
+      res.status(500).json({ message: 'added script' });
   
       page.on('console', async (msg) => {
         const txt = msg.text();
@@ -26,7 +28,7 @@ app.get('/get-revenue', async (req, res) => {
           const params = JSON.parse(txt.replace('intercepted-params:', ''));
           try {
             console.log("Solving captcha...");
-            res.status(500).json({ message: 'Solving Captcha' });
+            res.status(500).json({ message: 'Solving Captchha' });
             const res = await solver.cloudflareTurnstile(params);
             console.log(`Captcha solved: ${res.id}`);
             res.status(500).json({ message: 'Solving Captcha' });
