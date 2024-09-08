@@ -12,6 +12,9 @@ const solver = new Solver(process.env.CAPTCHA_KEY);
 // API endpoint to get total revenue in pounds
 app.get('/get-revenue', async (req, res) => {
     try {
+
+      console.log("Starting revenue calculation...");
+      res.status(500).json({ message: 'starting rev calc' });
       const browser = await chromium.launch({ headless: false });
       const context = await browser.newContext({ ignoreHTTPSErrors: true });
       const page = await context.newPage();
@@ -22,14 +25,19 @@ app.get('/get-revenue', async (req, res) => {
         if (txt.includes('intercepted-params:')) {
           const params = JSON.parse(txt.replace('intercepted-params:', ''));
           try {
+            console.log("Solving captcha...");
+            res.status(500).json({ message: 'Solving Captcha' });
             const res = await solver.cloudflareTurnstile(params);
+            console.log(`Captcha solved: ${res.id}`);
+            res.status(500).json({ message: 'Solving Captcha' });
             await page.evaluate((token) => {
               cfCallback(token);
             }, res.data);
           } catch (e) {
-            console.log(e.err);
-            process.exit();
-          }
+            console.error("Captcha solver error:", e);
+            res.status(500).json({ error: 'Captcha solver error' });
+            return;
+        }
         }
       });
   
