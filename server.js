@@ -15,7 +15,7 @@ app.get('/get-revenue', async (req, res) => {
 
       console.log("Starting revenue calculation...");
       const browser = await chromium.launch({
-        headless: true,
+        headless: false,
         args: ['--no-sandbox', '--disable-setuid-sandbox']
       }); 
       console.log("browser opened");     
